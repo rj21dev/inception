@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+
+  nginx:
+    build: ./requirements/nginx
+    image: ft_nginx
+    container_name: frontend
+    ports:
+      - "443:443"
+    volumes:
+      - ./requirements/nginx/conf:/etc/nginx/sites-available
+    networks:
+      - api
+    
+  mariadb:
+    build: ./requirements/mariadb
+    image: ft_mariadb
+    container_name: db
+    networks:
+      - api
+    env_file:
+      - .env
+  
+  wordpress:
+    build: ./requirements/wordpress
+    image: ft_wordpress
+    container_name: backend
+    networks:
+      - api
+
+networks:
+  api:
+    name: lan
+    driver: bridge
