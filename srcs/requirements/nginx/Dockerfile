@@ -12,4 +12,6 @@ RUN apt-get update\
 
 EXPOSE 443
 
+#RUN ln -s /etc/
+
 ENTRYPOINT [ "nginx", "-g", "daemon off;" ]

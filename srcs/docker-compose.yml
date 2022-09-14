@@ -10,8 +10,11 @@ services:
       - "443:443"
     volumes:
       - ./requirements/nginx/conf:/etc/nginx/sites-available
+      - /home/rjada/data/wp:/var/www
     networks:
       - api
+    depends_on:
+      - wordpress
     
   mariadb:
     build: ./requirements/mariadb
@@ -21,13 +24,19 @@ services:
       - api
     env_file:
       - .env
+    volumes:
+      - /home/rjada/data/db:/var/lib/mysql
   
   wordpress:
     build: ./requirements/wordpress
     image: ft_wordpress
     container_name: backend
+    volumes:
+      - /home/rjada/data/wp:/var/www
     networks:
       - api
+    depends_on:
+      - mariadb
 
 networks:
   api:
