@@ -35,6 +35,8 @@ services:
       - /home/rjada/data/wp:/var/www
     networks:
       - api
+    env_file:
+      - .env
     depends_on:
       - mariadb
 
