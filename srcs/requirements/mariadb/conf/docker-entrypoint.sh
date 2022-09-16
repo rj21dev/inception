@@ -1,7 +1,7 @@
 #!/bin/bash
-#mysql_install_db --skip-test-db > /dev/null
+
 if [ ! -d /var/lib/mysql/$DB_NAME ]; then
-	echo "Execute temp server to process environment variables"
+	echo "Execute temp server to create database, user and set root password"
 	mysql_install_db --skip-test-db
 	/usr/share/mysql/mysql.server start
 	mariadb -e "CREATE DATABASE $DB_NAME"
