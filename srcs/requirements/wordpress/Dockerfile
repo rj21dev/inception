@@ -14,11 +14,13 @@ RUN apt-get update\
 		&& chmod +x wp && mv wp /usr/local/bin\
 		&& wp core download --allow-root --path="/var/wordpress/" --locale=ru_RU
 
+WORKDIR /var/www/wordpress
+
 COPY conf/rjada42fr.conf /etc/php/8.1/fpm/pool.d/
-COPY conf/docker-entrypoint.sh .
+COPY conf/docker-entrypoint.sh /
 
 EXPOSE 9000
 
-ENTRYPOINT [ "./docker-entrypoint.sh" ]
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
 
 CMD [ "php-fpm8.1", "--nodaemonize" ]

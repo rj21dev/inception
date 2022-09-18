@@ -5,12 +5,12 @@ services:
   nginx:
     build: ./requirements/nginx
     image: ft_nginx
-    container_name: frontend
+    container_name: nginx
     depends_on:
       - wordpress
     restart: always
     volumes:
-      - wp-data:/var/www
+      - wp-data:/var/www/wordpress
     networks:
       - api
     ports:
@@ -19,7 +19,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     image: ft_mariadb
-    container_name: db
+    container_name: mariadb
     restart: always
     env_file:
       - .env
@@ -31,14 +31,41 @@ services:
   wordpress:
     build: ./requirements/wordpress
     image: ft_wordpress
-    container_name: backend
+    container_name: wordpress
     depends_on:
       - mariadb
     restart: always
     volumes:
-      - wp-data:/var/www
+      - wp-data:/var/www/wordpress
     env_file:
       - .env
+    networks:
+      - api
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ft_ftp
+    container_name: ftp
+    restart: always
+    volumes:
+      - wp-data:/var/www/wordpress
+    env_file:
+      - .env
+    networks:
+      - api
+    ports:
+      - "21:21"
+      - "21100-21110:21100-21110"
+
+  adminer:
+    build: ./requirements/bonus/adminer
+    image: ft_adminer
+    container_name: adminer
+    depends_on:
+      - mariadb
+    restart: always
+    volumes:
+      - wp-data:/var/www/wordpress
     networks:
       - api
 
