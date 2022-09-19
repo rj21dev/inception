@@ -14,10 +14,17 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 	sleep 7
 	wp config create --allow-root --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=mariadb:3306 --dbprefix=wp_
 	wp config set --allow-root WP_MEMORY_LIMIT 256M
+	wp config set --allow-root WP_REDIS_HOST redis
+	wp config set --allow-root WP_REDIS_PORT 6379 --raw
+	wp config set --allow-root WP_REDIS_DATABASE 0 --raw
+	wp config set --allow-root WP_CACHE true --raw
 	wp core install --allow-root --url=https://$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADM_NAME --admin_password=$WP_ADM_PASS --admin_email=$WP_ADM_MAIL --skip-email
 	wp theme install --allow-root $WP_THEME
 	wp theme activate --allow-root $WP_THEME
 	wp user create --allow-root $WP_USR_NAME $WP_USR_MAIL --role=$WP_USR_ROLE --user_pass=$WP_USER_PASS
+	wp plugin install --allow-root redis-cache --activate
+	wp plugin update --allow-root --all
+	wp redis enable --allow-root
 	wget -qO /var/wordpress/content.txt $WP_POST_CONTENT
 	cat /var/wordpress/content.txt | wp post generate --allow-root --post_content --count=10 --post_author=$WP_USR_NAME --post_date=2022-09-15
 	cat /var/wordpress/content.txt | wp post generate --allow-root --post_content --count=5 --post_type=page --post_date=2022-09-15

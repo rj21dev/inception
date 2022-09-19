@@ -69,6 +69,14 @@ services:
     networks:
       - api
 
+  redis:
+    build: ./requirements/bonus/redis
+    image: ft_redis
+    container_name: redis
+    restart: always
+    networks:
+      - api
+
 networks:
 
   api:
